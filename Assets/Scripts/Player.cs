@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     public float jumpSpeed = 0.1f;
     public float gravity = 5.0f;
     private Vector3 moveDirection = Vector3.zero;
+    public Record inputRecorder = new Record();
 
     // Start is called before the first frame update
     void Start()
@@ -22,7 +23,7 @@ public class Player : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         MoveX();
         Jump();
@@ -43,6 +44,11 @@ public class Player : MonoBehaviour
         FMPunch();
         FHKick();
         FHPunch();
+        FLJumpPunch();
+        FMHJumpPunch();
+        HJumpKick();
+        LMHJumpPunch();
+        LMJumpKick();
     }
 
     void MoveX()
@@ -55,6 +61,7 @@ public class Player : MonoBehaviour
         ryu.SetFloat("Speed", moveHorizontal);
         //Call the AddForce function of our Rigidbody2D rb2d supplying movement multiplied by speed to move our player.
         rgbd.AddForce(movement * speed);
+      
     }
 
     void Jump()
@@ -64,6 +71,7 @@ public class Player : MonoBehaviour
         {
             ryu.SetTrigger("Jump");
             rgbd.AddForce(new Vector2(0, 7.5f), ForceMode2D.Impulse);
+            inputRecorder.Write("Jump");
         }
     }
     void Crouch()
@@ -73,6 +81,7 @@ public class Player : MonoBehaviour
             ryu.SetBool("Crouch", true);
             ryu.SetBool("Idle", false);
             capsule.size = new Vector2(0.43f, 0.581f);
+            inputRecorder.Write("Crouch");
 
         }
         else if (Input.GetKeyUp(KeyCode.DownArrow) || Input.GetKeyUp(KeyCode.S))
@@ -80,6 +89,7 @@ public class Player : MonoBehaviour
             ryu.SetBool("Crouch", false);
             ryu.SetBool("Idle", true);
             capsule.size = new Vector2(0.43f, 0.81f);
+            inputRecorder.Write("Idle");
         }
     }
     void LPunch()
@@ -87,8 +97,10 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.U) && ryu.GetBool("Crouch").Equals(false) && ryu.GetFloat("Speed").Equals(0.0f))
         {
+            rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("LPunch");
             speed = 0.0f;
+            inputRecorder.Write("LPunch");
         }
     }
     void LMKick()
@@ -96,6 +108,7 @@ public class Player : MonoBehaviour
 
         if ((Input.GetKeyDown(KeyCode.H) || Input.GetKeyDown(KeyCode.J)) && ryu.GetBool("Crouch").Equals(false) && ryu.GetFloat("Speed").Equals(0.0f))
         {
+            rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("LMKick");
             speed = 0.0f;
         }
@@ -105,6 +118,7 @@ public class Player : MonoBehaviour
 
         if ((Input.GetKeyDown(KeyCode.I) || Input.GetKeyDown(KeyCode.O)) && ryu.GetBool("Crouch").Equals(false) && ryu.GetFloat("Speed").Equals(0.0f))
         {
+            rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("MHPunch");
             speed = 0.0f;
         }
@@ -114,6 +128,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.K) && ryu.GetBool("Crouch").Equals(false) && ryu.GetFloat("Speed").Equals(0.0f))
         {
+            rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("HKick");
             speed = 0.0f;
         }
@@ -123,6 +138,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.U) && ryu.GetBool("Crouch").Equals(true))
         {
+            rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("CLPunch");
         }
     }
@@ -131,6 +147,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.K) && ryu.GetBool("Crouch").Equals(true))
         {
+            rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("CHKick");
         }
     }
@@ -139,6 +156,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.H) && ryu.GetBool("Crouch").Equals(true))
         {
+            rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("CLKick");
         }
     }
@@ -147,6 +165,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.I) && ryu.GetBool("Crouch").Equals(true))
         {
+            rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("CMPunch");
         }
     }
@@ -155,6 +174,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.J) && ryu.GetBool("Crouch").Equals(true))
         {
+            rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("CMKick");
         }
     }
@@ -163,6 +183,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.O) && ryu.GetBool("Crouch").Equals(true))
         {
+            rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("CHPunch");
         }
     }
@@ -170,6 +191,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.U) && (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow) || ryu.GetFloat("Speed").Equals(1.0f)))
         {
+            rgbd.velocity = new Vector2(0.0f, 0.0f);
             speed = 0.0f;
             ryu.SetTrigger("FLPunch");
         }
@@ -178,6 +200,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.H) && (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow) || ryu.GetFloat("Speed").Equals(1.0f)))
         {
+            rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("FLKick");
             speed = 0.0f;
         }
@@ -186,6 +209,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.J) && (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow) || ryu.GetFloat("Speed").Equals(1.0f)))
         {
+            rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("FMPunch");
             speed = 0.0f;
         }
@@ -194,6 +218,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.I) && (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow) || ryu.GetFloat("Speed").Equals(1.0f)))
         {
+            rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("FMKick");
             speed = 0.0f;
         }
@@ -202,6 +227,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.O) && (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow) || ryu.GetFloat("Speed").Equals(1.0f)))
         {
+            rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("FHPunch");
             speed = 0.0f;
         }
@@ -210,8 +236,52 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.K) && (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow) || ryu.GetFloat("Speed").Equals(1.0f)))
         {
+            rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("FHKick");
             speed = 0.0f;
+        }
+    }
+    void FLJumpPunch()
+    {
+        if ((Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D)) && Input.GetKeyDown(KeyCode.I) && (player.transform.position.y > (-1.073f)))
+        {
+            ryu.SetTrigger("FLJumpPunch");
+            speed = 0.0f;
+        }
+    }
+    void FMHJumpPunch()
+    {
+        if ((Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D)) && (Input.GetKeyDown(KeyCode.I) || Input.GetKeyDown(KeyCode.O)) && (player.transform.position.y > (-1.073f)))
+        {
+            ryu.SetTrigger("FMHJumpPunch");
+            speed = 0.0f;
+        }
+    }
+    void HJumpKick()
+    {
+        if (Input.GetKeyDown(KeyCode.K) && (player.transform.position.y > (-1.073f)))
+        {
+            rgbd.velocity = new Vector2(0.0f, 0.0f);
+            ryu.SetTrigger("HJumpKick");
+            speed = 0.0f;
+        }
+    }
+    void LMHJumpPunch()
+    {
+        if ((Input.GetKeyDown(KeyCode.U) || Input.GetKeyDown(KeyCode.I) || Input.GetKeyDown(KeyCode.O)) && (player.transform.position.y > (-1.073f)))
+        {
+            rgbd.velocity = new Vector2(0.0f, 0.0f);
+            ryu.SetTrigger("LMHJumpPunch");
+            speed = 0.0f;
+        }
+
+    }
+    void LMJumpKick()
+    {
+        if ((Input.GetKeyDown(KeyCode.H) || Input.GetKeyDown(KeyCode.J)) && (player.transform.position.y > (-1.073f)))
+        {
+            rgbd.velocity = new Vector2 (0.0f,0.0f);
+            ryu.SetTrigger("LMJumpKick");
         }
     }
 }

@@ -1,0 +1,8 @@
+LPunch
+LPunch
+Jump
+LPunch
+Crouch
+Idle
+Crouch
+Idle
