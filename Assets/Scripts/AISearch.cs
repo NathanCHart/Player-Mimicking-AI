@@ -39,12 +39,10 @@ public class AISearch : MonoBehaviour
     private void Update()
     {
         distance = ai.transform.position.x - player.transform.position.x;
-        if (distance > 0.46f)
+        if (distance > 0.56f)
         {
-            Vector3 scale = bc2d.transform.localScale;
-            scale.x = 0.6852f;
-            bc2d.transform.localScale = scale;
-            aiSprite.flipX = true;
+            aiSprite.transform.localScale = new Vector3(-1, 1, 1);
+
             //Store the current horizontal input in the float moveHorizontal.
             float moveHorizontal = 0.9f;
             //Use the two store floats to create a new Vector2 variable movement.
@@ -56,10 +54,8 @@ public class AISearch : MonoBehaviour
         }
         else if (distance < -0.46f)
         {
-            Vector3 scale = bc2d.transform.localScale;
-            scale.x = -0.6852f;
-            bc2d.transform.localScale = scale;
-            aiSprite.flipX = false;
+            aiSprite.transform.localScale = new Vector3(1, 1, 1);
+
             //Store the current horizontal input in the float moveHorizontal.
             float moveHorizontal = 0.9f;
             //Use the two store floats to create a new Vector2 variable movement.
@@ -86,7 +82,7 @@ public class AISearch : MonoBehaviour
     public List<string> ReadPlayer()
     {
         String line;
-        filePath = Application.streamingAssetsPath + "/PlayerInput.txt";
+        filePath = Application.dataPath + "/PlayerInput.txt";
         try
         {
             //Pass the file path and file name to the StreamReader constructor
@@ -121,7 +117,7 @@ public class AISearch : MonoBehaviour
         string line;
         float dist;
 
-        filePath = Application.streamingAssetsPath + "/Distance.txt";
+        filePath = Application.dataPath + "/Distance.txt";
         try
         {
             //Pass the file path and file name to the StreamReader constructor
@@ -156,7 +152,7 @@ public class AISearch : MonoBehaviour
     public List<string> ReadEnemy()
     {
         String line;
-        filePath = Application.streamingAssetsPath + "/EnemyInput.txt";
+        filePath = Application.dataPath + "/EnemyInput.txt";
         try
         {
             //Pass the file path and file name to the StreamReader constructor
@@ -232,8 +228,13 @@ public class AISearch : MonoBehaviour
         else if (playerOptimal[opt].Equals("Idle"))
         {
             aiAnim.SetBool("Crouch", false);
+            aiAnim.SetBool("StandBlock", false);
             aiAnim.SetBool("Idle", true);
             capsule.size = new Vector2(0.43f, 0.81f);
+        }
+        else if (playerOptimal[opt].Equals("StandBlock"))
+        {
+            aiAnim.SetBool("StandBlock", true);
         }
         else
         {

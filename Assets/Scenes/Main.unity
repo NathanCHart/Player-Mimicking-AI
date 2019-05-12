@@ -359,6 +359,7 @@ GameObject:
   m_Component:
   - component: {fileID: 343692004}
   - component: {fileID: 343692005}
+  - component: {fileID: 343692006}
   m_Layer: 8
   m_Name: Hitbox
   m_TagString: Untagged
@@ -406,6 +407,21 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.16, y: 0.16}
   m_EdgeRadius: 0
+--- !u!114 &343692006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 343692003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18bb12a6da957604e9e680a69373da42, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitbox: {fileID: 343692005}
+  enemy: {fileID: 1096777995}
+  EnemyHealth: 100
 --- !u!1 &359894623
 GameObject:
   m_ObjectHideFlags: 0
@@ -813,6 +829,7 @@ GameObject:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
+  - component: {fileID: 519420030}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -828,6 +845,18 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_Enabled: 1
+--- !u!114 &519420030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adc6c86a125be7d41ab21a96873d8446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -1481,6 +1510,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1018229735}
   - component: {fileID: 1018229736}
+  - component: {fileID: 1018229737}
   m_Layer: 8
   m_Name: Hitbox
   m_TagString: Untagged
@@ -1528,6 +1558,21 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.16, y: 0.16}
   m_EdgeRadius: 0
+--- !u!114 &1018229737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1018229734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72b4676c2a9e9284bbe04a155cb01588, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitbox: {fileID: 1018229736}
+  enemy: {fileID: 1470082464}
+  EnemyHealth: 100
 --- !u!1 &1086051948
 GameObject:
   m_ObjectHideFlags: 0
@@ -2229,7 +2274,7 @@ GameObject:
   - component: {fileID: 1470082465}
   m_Layer: 8
   m_Name: Ryu_AI
-  m_TagString: Player
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2276,6 +2321,7 @@ MonoBehaviour:
   distance: 0
   aiSprite: {fileID: 1470082468}
   bc2d: {fileID: 343692005}
+  capsule: {fileID: 0}
 --- !u!50 &1470082466
 Rigidbody2D:
   serializedVersion: 4
@@ -2355,7 +2401,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 66fdf25a40095904b8340db02fa8fbf0, type: 3}
   m_Color: {r: 0.3529412, g: 0.40000004, b: 0.24705884, a: 1}
-  m_FlipX: 1
+  m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
   m_Size: {x: 0.43, y: 0.81}
@@ -2373,7 +2419,7 @@ Transform:
   m_GameObject: {fileID: 1470082463}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.448, y: -1.081, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: -1, y: 1, z: 1}
   m_Children:
   - {fileID: 343692004}
   m_Father: {fileID: 0}

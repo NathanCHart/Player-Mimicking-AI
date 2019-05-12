@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class HitBoxHealth : MonoBehaviour
 {
@@ -12,12 +13,25 @@ public class HitBoxHealth : MonoBehaviour
     void Start()
     {
         hitbox = GetComponent<BoxCollider2D>();
-        enemy = GetComponent<CapsuleCollider2D>();
-        
+        enemy = GetComponent<CapsuleCollider2D>();     
+    }
+
+    private void Update()
+    {
+        if(EnemyHealth == 0)
+        {
+            SceneManager.LoadScene("PlayerWin", LoadSceneMode.Single);
+        }
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
+        if(collision.gameObject.tag == "Enemy")
+        {
+            Debug.Log("Collided");
+            EnemyHealth = EnemyHealth - 5.0f;
+            Debug.Log(EnemyHealth);
+        }
     }
 }

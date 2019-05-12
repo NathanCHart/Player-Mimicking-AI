@@ -67,39 +67,35 @@ public class Player : MonoBehaviour
         distance = enemy.transform.position.x - player.transform.position.x;
         if (distance > 0.46f)
         {
-            playerSprite.flipX = false;
-
-            Vector3 scale = bc2d.transform.localScale;
-            scale.x = 0.6852f;
-            bc2d.transform.localScale = scale;
+            player.transform.localScale = new Vector3(1, 1, 1);
         }
         else if (distance < -0.42f)
         {
-            playerSprite.flipX = true;
+            player.transform.localScale = new Vector3(-1, 1, 1);
 
-            Vector3 scale = bc2d.transform.localScale;
-            scale.x = -0.6852f;
-            bc2d.transform.localScale = scale;
         }
     }
 
     void MoveX()
     {
-        //Store the current horizontal input in the float moveHorizontal.
-        float moveHorizontal = Input.GetAxis("Horizontal");
-        //Use the two store floats to create a new Vector2 variable movement.
-        Vector2 movement = new Vector2(moveHorizontal, 0.0f);
-        speed = 9.0f;
-        ryu.SetFloat("Speed", moveHorizontal);
-        //Call the AddForce function of our Rigidbody2D rb2d supplying movement multiplied by speed to move our player.
-        rgbd.AddForce(movement * speed);
+        if (!ryu.GetBool("StandBlock"))
+        {
+            //Store the current horizontal input in the float moveHorizontal.
+            float moveHorizontal = Input.GetAxis("Horizontal");
+            //Use the two store floats to create a new Vector2 variable movement.
+            Vector2 movement = new Vector2(moveHorizontal, 0.0f);
+            speed = 9.0f;
+            ryu.SetFloat("Speed", moveHorizontal);
+            //Call the AddForce function of our Rigidbody2D rb2d supplying movement multiplied by speed to move our player.
+            rgbd.AddForce(movement * speed);
+        }
     }
 
     void FBlock()
     {
         if (Input.GetKeyDown(KeyCode.A) && (distance < 0.48) && (distance > 0.45))
         {
-            ryu.SetTrigger("StandBlock");
+            ryu.SetBool("StandBlock", true);
             inputRecorder.WriteDistance(distance);
             inputRecorder.WritePlayer("StandBlock");
             enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
@@ -108,12 +104,16 @@ public class Player : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.D) && (distance < -0.45) && (distance > -0.48))
         {
-            ryu.SetTrigger("StandBlock");
+            ryu.SetBool("StandBlock", true);
             inputRecorder.WriteDistance(distance);
             inputRecorder.WritePlayer("StandBlock");
             enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
             enemyAnimName = enemyClipInfo[0].clip.name;
             inputRecorder.WriteEnemy(enemyAnimName);
+        }
+        else
+        {
+            ryu.SetBool("StandBlock", false);
         }
     }
 

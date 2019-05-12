@@ -18,7 +18,7 @@ public class Record
     [STAThread]
     public void WritePlayer(string PlayerInput)
     {
-        filePath = Application.streamingAssetsPath + "/PlayerInput.txt";
+        filePath = Application.dataPath + "/PlayerInput.txt";
 
         if (!File.Exists(filePath))
         {
@@ -51,7 +51,7 @@ public class Record
     [STAThread]
     public void WriteDistance(float distance)
     {
-        filePath = Application.streamingAssetsPath + "/Distance.txt";
+        filePath = Application.dataPath + "/Distance.txt";
 
         if (!File.Exists(filePath))
         {
@@ -84,7 +84,7 @@ public class Record
     [STAThread]
     public void WriteEnemy(string enemyInput)
     {
-        filePath = Application.streamingAssetsPath + "/EnemyInput.txt";
+        filePath = Application.dataPath + "/EnemyInput.txt";
 
         if (!File.Exists(filePath))
         {

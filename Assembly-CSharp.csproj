@@ -68,7 +68,9 @@
     <Compile Include="Assets\ProCore\ProBuilder\API Examples\Vertex Colors\HighlightNearestFace.cs" />
     <Compile Include="Assets\Scripts\AISearch.cs" />
     <Compile Include="Assets\Scripts\HitBoxHealth.cs" />
+    <Compile Include="Assets\Scripts\HitBoxHealthAI.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
+    <Compile Include="Assets\Scripts\QuitOnEscape.cs" />
     <Compile Include="Assets\Scripts\Record.cs" />
     <Compile Include="Assets\Scripts\RepeatingBackground.cs" />
     <Compile Include="Assets\Scripts\ScrollingObject.cs" />
@@ -83,7 +85,6 @@
     <None Include="Assets\ProCore\ProBuilder\About\changelog.txt" />
     <None Include="Assets\ProCore\ProBuilder\Shader\DiffuseVertexColor.shader" />
     <None Include="Assets\ProCore\ProBuilder\Shader\pb_FaceHighlight.shader" />
-    <None Include="Assets\StreamingAssets\Distance.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
     <None Include="Assets\ProCore\ProBuilder\Shader\pb_UnlitSolidColor.shader" />
     <None Include="Assets\ProCore\ProBuilder\Shader\pb_ReferenceUnlit.shader" />
@@ -106,8 +107,6 @@
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Surface.cginc" />
     <None Include="Assets\ProCore\ProBuilder\Shader\pb_NormalPreview.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile Overlay.shader" />
-    <None Include="Assets\StreamingAssets\EnemyInput.txt" />
-    <None Include="Assets\StreamingAssets\PlayerInput.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
     <None Include="Assets\ProCore\ProBuilder\Shader\pb_ScrollHighlight.shader" />
