@@ -8,23 +8,36 @@ public class Player : MonoBehaviour
 	public GameObject enemy;
     public Rigidbody2D rgbd;
     public Animator ryu;
+    public Animator enemyAnim;
+    public AnimatorClipInfo[] enemyClipInfo;
+    string enemyAnimName;
     public CapsuleCollider2D capsule;
     public float speed;
     public float jumpSpeed = 0.1f;
     public float gravity = 5.0f;
+    public float distance;
     private Vector3 moveDirection = Vector3.zero;
     public Record inputRecorder = new Record();
+    public SpriteRenderer playerSprite;
+    public BoxCollider2D bc2d;
 
     // Start is called before the first frame update
     void Start()
     {
-        rgbd = GetComponent<Rigidbody2D>();
+        rgbd.GetComponent<Rigidbody2D>();
         ryu.GetComponent<Animator>();
+        enemyAnim.GetComponent<Animator>();
+        bc2d.GetComponent<BoxCollider2D>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!Input.anyKey)
+        {
+            ryu.SetBool("Idle", true);
+        }
+
         MoveX();
         Jump();
         Crouch();
@@ -49,6 +62,25 @@ public class Player : MonoBehaviour
         HJumpKick();
         LMHJumpPunch();
         LMJumpKick();
+        FBlock();
+
+        distance = enemy.transform.position.x - player.transform.position.x;
+        if (distance > 0.46f)
+        {
+            playerSprite.flipX = false;
+
+            Vector3 scale = bc2d.transform.localScale;
+            scale.x = 0.6852f;
+            bc2d.transform.localScale = scale;
+        }
+        else if (distance < -0.42f)
+        {
+            playerSprite.flipX = true;
+
+            Vector3 scale = bc2d.transform.localScale;
+            scale.x = -0.6852f;
+            bc2d.transform.localScale = scale;
+        }
     }
 
     void MoveX()
@@ -61,17 +93,42 @@ public class Player : MonoBehaviour
         ryu.SetFloat("Speed", moveHorizontal);
         //Call the AddForce function of our Rigidbody2D rb2d supplying movement multiplied by speed to move our player.
         rgbd.AddForce(movement * speed);
-      
+    }
+
+    void FBlock()
+    {
+        if (Input.GetKeyDown(KeyCode.A) && (distance < 0.48) && (distance > 0.45))
+        {
+            ryu.SetTrigger("StandBlock");
+            inputRecorder.WriteDistance(distance);
+            inputRecorder.WritePlayer("StandBlock");
+            enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
+            enemyAnimName = enemyClipInfo[0].clip.name;
+            inputRecorder.WriteEnemy(enemyAnimName);
+        }
+        else if (Input.GetKeyDown(KeyCode.D) && (distance < -0.45) && (distance > -0.48))
+        {
+            ryu.SetTrigger("StandBlock");
+            inputRecorder.WriteDistance(distance);
+            inputRecorder.WritePlayer("StandBlock");
+            enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
+            enemyAnimName = enemyClipInfo[0].clip.name;
+            inputRecorder.WriteEnemy(enemyAnimName);
+        }
     }
 
     void Jump()
     {
-
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
         {
             ryu.SetTrigger("Jump");
-            rgbd.AddForce(new Vector2(0, 7.5f), ForceMode2D.Impulse);
-            inputRecorder.Write("Jump");
+            rgbd.AddForce(new Vector2(0, 7.7f), ForceMode2D.Impulse);
+            distance = enemy.transform.position.x - player.transform.position.x;
+            inputRecorder.WriteDistance(distance);
+            inputRecorder.WritePlayer("Jump");
+            enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
+            enemyAnimName = enemyClipInfo[0].clip.name;
+            inputRecorder.WriteEnemy(enemyAnimName);
         }
     }
     void Crouch()
@@ -81,15 +138,24 @@ public class Player : MonoBehaviour
             ryu.SetBool("Crouch", true);
             ryu.SetBool("Idle", false);
             capsule.size = new Vector2(0.43f, 0.581f);
-            inputRecorder.Write("Crouch");
-
+            inputRecorder.WritePlayer("Crouch");
+            distance = enemy.transform.position.x - player.transform.position.x;
+            inputRecorder.WriteDistance(distance);
+            enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
+            enemyAnimName = enemyClipInfo[0].clip.name;
+            inputRecorder.WriteEnemy(enemyAnimName);
         }
         else if (Input.GetKeyUp(KeyCode.DownArrow) || Input.GetKeyUp(KeyCode.S))
         {
             ryu.SetBool("Crouch", false);
             ryu.SetBool("Idle", true);
             capsule.size = new Vector2(0.43f, 0.81f);
-            inputRecorder.Write("Idle");
+            inputRecorder.WritePlayer("Idle");
+            distance = enemy.transform.position.x - player.transform.position.x;
+            inputRecorder.WriteDistance(distance);
+            enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
+            enemyAnimName = enemyClipInfo[0].clip.name;
+            inputRecorder.WriteEnemy(enemyAnimName);
         }
     }
     void LPunch()
@@ -100,7 +166,12 @@ public class Player : MonoBehaviour
             rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("LPunch");
             speed = 0.0f;
-            inputRecorder.Write("LPunch");
+            inputRecorder.WritePlayer("LPunch");
+            distance = enemy.transform.position.x - player.transform.position.x;
+            inputRecorder.WriteDistance(distance);
+            enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
+            enemyAnimName = enemyClipInfo[0].clip.name;
+            inputRecorder.WriteEnemy(enemyAnimName);
         }
     }
     void LMKick()
@@ -111,6 +182,12 @@ public class Player : MonoBehaviour
             rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("LMKick");
             speed = 0.0f;
+            inputRecorder.WritePlayer("LMKick");
+            distance = enemy.transform.position.x - player.transform.position.x;
+            inputRecorder.WriteDistance(distance);
+            enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
+            enemyAnimName = enemyClipInfo[0].clip.name;
+            inputRecorder.WriteEnemy(enemyAnimName);
         }
     }
     void MHPunch()
@@ -120,7 +197,13 @@ public class Player : MonoBehaviour
         {
             rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("MHPunch");
+            inputRecorder.WritePlayer("MHPunch");
+            distance = enemy.transform.position.x - player.transform.position.x;
+            inputRecorder.WriteDistance(distance);
             speed = 0.0f;
+            enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
+            enemyAnimName = enemyClipInfo[0].clip.name;
+            inputRecorder.WriteEnemy(enemyAnimName);
         }
     }
     void HKick()
@@ -130,7 +213,13 @@ public class Player : MonoBehaviour
         {
             rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("HKick");
+            inputRecorder.WritePlayer("HKick");
+            distance = enemy.transform.position.x - player.transform.position.x;
+            inputRecorder.WriteDistance(distance);
             speed = 0.0f;
+            enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
+            enemyAnimName = enemyClipInfo[0].clip.name;
+            inputRecorder.WriteEnemy(enemyAnimName);
         }
     }
     void CLPunch()
@@ -140,6 +229,12 @@ public class Player : MonoBehaviour
         {
             rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("CLPunch");
+            inputRecorder.WritePlayer("CLPunch");
+            distance = enemy.transform.position.x - player.transform.position.x;
+            inputRecorder.WriteDistance(distance);
+            enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
+            enemyAnimName = enemyClipInfo[0].clip.name;
+            inputRecorder.WriteEnemy(enemyAnimName);
         }
     }
     void CHKick()
@@ -149,6 +244,12 @@ public class Player : MonoBehaviour
         {
             rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("CHKick");
+            inputRecorder.WritePlayer("CHKick");
+            distance = enemy.transform.position.x - player.transform.position.x;
+            inputRecorder.WriteDistance(distance);
+            enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
+            enemyAnimName = enemyClipInfo[0].clip.name;
+            inputRecorder.WriteEnemy(enemyAnimName);
         }
     }
     void CLKick()
@@ -158,6 +259,12 @@ public class Player : MonoBehaviour
         {
             rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("CLKick");
+            inputRecorder.WritePlayer("CLKick");
+            distance = enemy.transform.position.x - player.transform.position.x;
+            inputRecorder.WriteDistance(distance);
+            enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
+            enemyAnimName = enemyClipInfo[0].clip.name;
+            inputRecorder.WriteEnemy(enemyAnimName);
         }
     }
     void CMPunch()
@@ -167,6 +274,12 @@ public class Player : MonoBehaviour
         {
             rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("CMPunch");
+            inputRecorder.WritePlayer("CMPunch");
+            distance = enemy.transform.position.x - player.transform.position.x;
+            inputRecorder.WriteDistance(distance);
+            enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
+            enemyAnimName = enemyClipInfo[0].clip.name;
+            inputRecorder.WriteEnemy(enemyAnimName);
         }
     }
     void CMKick()
@@ -176,6 +289,12 @@ public class Player : MonoBehaviour
         {
             rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("CMKick");
+            inputRecorder.WritePlayer("CMKick");
+            distance = enemy.transform.position.x - player.transform.position.x;
+            inputRecorder.WriteDistance(distance);
+            enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
+            enemyAnimName = enemyClipInfo[0].clip.name;
+            inputRecorder.WriteEnemy(enemyAnimName);
         }
     }
     void CHPunch()
@@ -185,6 +304,12 @@ public class Player : MonoBehaviour
         {
             rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("CHPunch");
+            inputRecorder.WritePlayer("CHPunch");
+            distance = enemy.transform.position.x - player.transform.position.x;
+            inputRecorder.WriteDistance(distance);
+            enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
+            enemyAnimName = enemyClipInfo[0].clip.name;
+            inputRecorder.WriteEnemy(enemyAnimName);
         }
     }
     void FLPunch()
@@ -194,6 +319,12 @@ public class Player : MonoBehaviour
             rgbd.velocity = new Vector2(0.0f, 0.0f);
             speed = 0.0f;
             ryu.SetTrigger("FLPunch");
+            inputRecorder.WritePlayer("FLPunch");
+            distance = enemy.transform.position.x - player.transform.position.x;
+            inputRecorder.WriteDistance(distance);
+            enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
+            enemyAnimName = enemyClipInfo[0].clip.name;
+            inputRecorder.WriteEnemy(enemyAnimName);
         }
     }
     void FLKick()
@@ -202,7 +333,13 @@ public class Player : MonoBehaviour
         {
             rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("FLKick");
+            inputRecorder.WritePlayer("FLKick");
+            distance = enemy.transform.position.x - player.transform.position.x;
+            inputRecorder.WriteDistance(distance);
             speed = 0.0f;
+            enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
+            enemyAnimName = enemyClipInfo[0].clip.name;
+            inputRecorder.WriteEnemy(enemyAnimName);
         }
     }
     void FMKick()
@@ -210,8 +347,14 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.J) && (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow) || ryu.GetFloat("Speed").Equals(1.0f)))
         {
             rgbd.velocity = new Vector2(0.0f, 0.0f);
-            ryu.SetTrigger("FMPunch");
+            ryu.SetTrigger("FMKick");
+            inputRecorder.WritePlayer("FMKick");
+            distance = enemy.transform.position.x - player.transform.position.x;
+            inputRecorder.WriteDistance(distance);
             speed = 0.0f;
+            enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
+            enemyAnimName = enemyClipInfo[0].clip.name;
+            inputRecorder.WriteEnemy(enemyAnimName);
         }
     }
     void FMPunch()
@@ -219,8 +362,14 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.I) && (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow) || ryu.GetFloat("Speed").Equals(1.0f)))
         {
             rgbd.velocity = new Vector2(0.0f, 0.0f);
-            ryu.SetTrigger("FMKick");
+            ryu.SetTrigger("FMPunch");
+            inputRecorder.WritePlayer("FMPunch");
+            distance = enemy.transform.position.x - player.transform.position.x;
+            inputRecorder.WriteDistance(distance);
             speed = 0.0f;
+            enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
+            enemyAnimName = enemyClipInfo[0].clip.name;
+            inputRecorder.WriteEnemy(enemyAnimName);
         }
     }
     void FHPunch()
@@ -229,7 +378,13 @@ public class Player : MonoBehaviour
         {
             rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("FHPunch");
+            inputRecorder.WritePlayer("FHPunch");
+            distance = enemy.transform.position.x - player.transform.position.x;
+            inputRecorder.WriteDistance(distance);
             speed = 0.0f;
+            enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
+            enemyAnimName = enemyClipInfo[0].clip.name;
+            inputRecorder.WriteEnemy(enemyAnimName);
         }
     }
     void FHKick()
@@ -238,7 +393,13 @@ public class Player : MonoBehaviour
         {
             rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("FHKick");
+            inputRecorder.WritePlayer("FHKick");
+            distance = enemy.transform.position.x - player.transform.position.x;
+            inputRecorder.WriteDistance(distance);
             speed = 0.0f;
+            enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
+            enemyAnimName = enemyClipInfo[0].clip.name;
+            inputRecorder.WriteEnemy(enemyAnimName);
         }
     }
     void FLJumpPunch()
@@ -246,7 +407,13 @@ public class Player : MonoBehaviour
         if ((Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D)) && Input.GetKeyDown(KeyCode.I) && (player.transform.position.y > (-1.073f)))
         {
             ryu.SetTrigger("FLJumpPunch");
+            inputRecorder.WritePlayer("FLJumpPunch");
+            distance = enemy.transform.position.x - player.transform.position.x;
+            inputRecorder.WriteDistance(distance);
             speed = 0.0f;
+            enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
+            enemyAnimName = enemyClipInfo[0].clip.name;
+            inputRecorder.WriteEnemy(enemyAnimName);
         }
     }
     void FMHJumpPunch()
@@ -254,7 +421,13 @@ public class Player : MonoBehaviour
         if ((Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D)) && (Input.GetKeyDown(KeyCode.I) || Input.GetKeyDown(KeyCode.O)) && (player.transform.position.y > (-1.073f)))
         {
             ryu.SetTrigger("FMHJumpPunch");
+            inputRecorder.WritePlayer("FMHJumpPunch");
+            distance = enemy.transform.position.x - player.transform.position.x;
+            inputRecorder.WriteDistance(distance);
             speed = 0.0f;
+            enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
+            enemyAnimName = enemyClipInfo[0].clip.name;
+            inputRecorder.WriteEnemy(enemyAnimName);
         }
     }
     void HJumpKick()
@@ -263,7 +436,13 @@ public class Player : MonoBehaviour
         {
             rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("HJumpKick");
+            inputRecorder.WritePlayer("HJumpKick");
+            distance = enemy.transform.position.x - player.transform.position.x;
+            inputRecorder.WriteDistance(distance);
             speed = 0.0f;
+            enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
+            enemyAnimName = enemyClipInfo[0].clip.name;
+            inputRecorder.WriteEnemy(enemyAnimName);
         }
     }
     void LMHJumpPunch()
@@ -272,7 +451,13 @@ public class Player : MonoBehaviour
         {
             rgbd.velocity = new Vector2(0.0f, 0.0f);
             ryu.SetTrigger("LMHJumpPunch");
+            inputRecorder.WritePlayer("LMHJumpPunch");
+            distance = enemy.transform.position.x - player.transform.position.x;
+            inputRecorder.WriteDistance(distance);
             speed = 0.0f;
+            enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
+            enemyAnimName = enemyClipInfo[0].clip.name;
+            inputRecorder.WriteEnemy(enemyAnimName);
         }
 
     }
@@ -282,6 +467,12 @@ public class Player : MonoBehaviour
         {
             rgbd.velocity = new Vector2 (0.0f,0.0f);
             ryu.SetTrigger("LMJumpKick");
+            inputRecorder.WritePlayer("LMJumpKick");
+            distance = enemy.transform.position.x - player.transform.position.x;
+            inputRecorder.WriteDistance(distance);
+            enemyClipInfo = enemyAnim.GetCurrentAnimatorClipInfo(0);
+            enemyAnimName = enemyClipInfo[0].clip.name;
+            inputRecorder.WriteEnemy(enemyAnimName);
         }
     }
 }

@@ -1896,10 +1896,14 @@ MonoBehaviour:
   enemy: {fileID: 1470082463}
   rgbd: {fileID: 1096777993}
   ryu: {fileID: 1096777992}
+  enemyAnim: {fileID: 1470082467}
   capsule: {fileID: 1096777995}
   speed: 9
   jumpSpeed: 0.1
   gravity: 5
+  distance: 0
+  playerSprite: {fileID: 1096777990}
+  bc2d: {fileID: 1018229736}
 --- !u!70 &1096777995
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -2222,6 +2226,7 @@ GameObject:
   - component: {fileID: 1470082467}
   - component: {fileID: 1470082466}
   - component: {fileID: 1470082464}
+  - component: {fileID: 1470082465}
   m_Layer: 8
   m_Name: Ryu_AI
   m_TagString: Player
@@ -2245,6 +2250,32 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 0.43, y: 0.81}
   m_Direction: 0
+--- !u!114 &1470082465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1470082463}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc43b1378bc01894092626037a9dbb87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  filePath: 
+  playerIn: []
+  enemyIn: []
+  distanceIn: []
+  aiAnim: {fileID: 1470082467}
+  rgbd: {fileID: 1470082466}
+  ai: {fileID: 1470082463}
+  player: {fileID: 1096777989}
+  playerAnim: {fileID: 1096777992}
+  playerAnimName: 
+  aiAnimName: 
+  distance: 0
+  aiSprite: {fileID: 1470082468}
+  bc2d: {fileID: 343692005}
 --- !u!50 &1470082466
 Rigidbody2D:
   serializedVersion: 4
