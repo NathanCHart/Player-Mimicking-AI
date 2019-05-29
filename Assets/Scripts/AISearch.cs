@@ -23,6 +23,7 @@ public class AISearch : MonoBehaviour
     public SpriteRenderer aiSprite;
     public BoxCollider2D bc2d;
     public CapsuleCollider2D capsule;
+    public Player ryu = new Player();
 
     // Start is called before the first frame update
     void Start()
@@ -38,44 +39,65 @@ public class AISearch : MonoBehaviour
 
     private void Update()
     {
+        playerClipInfo = playerAnim.GetCurrentAnimatorClipInfo(0);
+        playerAnimName = playerClipInfo[0].clip.name;
         distance = ai.transform.position.x - player.transform.position.x;
-        if (distance > 0.56f)
+
+       if (ryu.isAttacking())
+        {
+            if (distance > 0.56f)
+            {
+                aiSprite.transform.localScale = new Vector3(-1, 1, 1);
+
+
+                float moveHorizontal = 0.9f;
+
+                Vector2 movement = new Vector2(moveHorizontal, 0.0f);
+                float speed = 9.0f;
+                aiAnim.SetFloat("Speed", moveHorizontal);
+
+                rgbd.AddForce(movement * speed);
+            }
+            else if (distance < -0.46f)
+            {
+                aiSprite.transform.localScale = new Vector3(1, 1, 1);
+
+                float moveHorizontal = 0.9f;
+                Vector2 movement = new Vector2(moveHorizontal, 0.0f);
+                float speed = -9.0f;
+                aiAnim.SetFloat("Speed", moveHorizontal);
+                rgbd.AddForce(movement * speed);
+            }
+        }  
+        else if (distance > 0.56f)
         {
             aiSprite.transform.localScale = new Vector3(-1, 1, 1);
 
-            //Store the current horizontal input in the float moveHorizontal.
             float moveHorizontal = 0.9f;
-            //Use the two store floats to create a new Vector2 variable movement.
             Vector2 movement = new Vector2(moveHorizontal, 0.0f);
             float speed = -7.0f;
             aiAnim.SetFloat("Speed", moveHorizontal);
-            //Call the AddForce function of our Rigidbody2D rb2d supplying movement multiplied by speed to move our player.
             rgbd.AddForce(movement * speed);
         }
         else if (distance < -0.46f)
         {
             aiSprite.transform.localScale = new Vector3(1, 1, 1);
 
-            //Store the current horizontal input in the float moveHorizontal.
             float moveHorizontal = 0.9f;
-            //Use the two store floats to create a new Vector2 variable movement.
             Vector2 movement = new Vector2(moveHorizontal, 0.0f);
-            float speed = 9.0f;
+            float speed = 7.0f;
             aiAnim.SetFloat("Speed", moveHorizontal);
-            //Call the AddForce function of our Rigidbody2D rb2d supplying movement multiplied by speed to move our player.
             rgbd.AddForce(movement * speed);
         }
         else
         {
-            //Store the current horizontal input in the float moveHorizontal.
             float moveHorizontal = 0.0f;
-            //Use the two store floats to create a new Vector2 variable movement.
             Vector2 movement = new Vector2(moveHorizontal, 0.0f);
             float speed = -9.0f;
             aiAnim.SetFloat("Speed", moveHorizontal);
-            //Call the AddForce function of our Rigidbody2D rb2d supplying movement multiplied by speed to move our player.
             rgbd.AddForce(movement * speed);
         }
+        
     }
 
     [STAThread]
@@ -85,22 +107,16 @@ public class AISearch : MonoBehaviour
         filePath = Application.dataPath + "/PlayerInput.txt";
         try
         {
-            //Pass the file path and file name to the StreamReader constructor
             StreamReader sr = new StreamReader(filePath);
 
-            //Read the first line of text
             line = sr.ReadLine();
 
-            //Continue to read until you reach end of file
             while (line != null)
             {
-                //write the lie to console window
                 playerIn.Add(line);
-                //Read the next line
                 line = sr.ReadLine();
             }
 
-            //close the file
             sr.Close();
         }
         catch (Exception e)
@@ -120,24 +136,18 @@ public class AISearch : MonoBehaviour
         filePath = Application.dataPath + "/Distance.txt";
         try
         {
-            //Pass the file path and file name to the StreamReader constructor
             StreamReader sr = new StreamReader(filePath);
 
-            //Read the first line of text
             line = sr.ReadLine();
             dist = float.Parse(line);
 
-            //Continue to read until you reach end of file
             while (line != null)
             {
-                //write the lie to console window
                 distanceIn.Add(dist);
-                //Read the next line
                 line = sr.ReadLine();
                 dist = float.Parse(line);
             }
 
-            //close the file
             sr.Close();
         }
         catch (Exception e)
@@ -155,22 +165,16 @@ public class AISearch : MonoBehaviour
         filePath = Application.dataPath + "/EnemyInput.txt";
         try
         {
-            //Pass the file path and file name to the StreamReader constructor
             StreamReader sr = new StreamReader(filePath);
 
-            //Read the first line of text
             line = sr.ReadLine();
 
-            //Continue to read until you reach end of file
             while (line != null)
             {
-                //write the lie to console window
                 enemyIn.Add(line);
-                //Read the next line
                 line = sr.ReadLine();
             }
 
-            //close the file
             sr.Close();
         }
         catch (Exception e)
